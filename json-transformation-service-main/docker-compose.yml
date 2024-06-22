@@ -1,0 +1,40 @@
+version: '3.0'
+
+services:
+  postgresdb:
+    container_name: "json-transformation-service-postgres"
+    image: 'postgres:14.1-alpine'
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=json_transformation_service
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+    volumes:
+      - ~/data/postgresdb:/data/postgresdb
+    logging:
+      driver: none
+    networks:
+      - json_transformation_service_net
+
+  json-transformation-service:
+    container_name: "json-transformation-service-test-app"
+    depends_on:
+      - postgresdb
+    image: "maven:3-jdk-11"
+    ports:
+      - "9999:9999"
+    environment:
+      - POSTGRES_DB_URL=jdbc:postgresql://postgresdb:5432/json_transformation_service
+      - POSTGRES_DB_USERNAME=postgres
+      - POSTGRES_DB_PASSWORD=admin
+    volumes:
+      - .:/app
+    working_dir: /app
+    networks:
+      - json_transformation_service_net
+    command: mvn clean verify test
+
+networks:
+  json_transformation_service_net:
+    driver: bridge

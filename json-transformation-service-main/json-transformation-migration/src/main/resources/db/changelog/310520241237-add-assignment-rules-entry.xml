@@ -1,0 +1,17 @@
+<databaseChangeLog
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet author="Suraj" id="310520241237">
+    <sql>
+      INSERT INTO transformation_rules("created_at","updated_at","version","rule_name","rule_owner","status","rule_version","uploaded_by","last_updated_by","rule_specs","comment")
+      VALUES
+      (E'2024-05-31 16:42:51.37226',E'2024-05-31 16:51:15.78383',2,E'assignment_rule',E'jhon',E'INACTIVE',0,E'jhon.doe',E'jhon.doe',E'[{"operation":"shift","spec":{"rating":{"primary":{"value":"Rating"},"*":{"max":"SecondaryRatings.&amp;1.Range","value":"SecondaryRatings.&amp;1.Value","$":"SecondaryRatings.&amp;1.Id"}}}}]',E'Created'),
+      (E'2024-05-31 16:52:22.414837',E'2024-05-31 16:52:22.414873',0,E'assignment_rule',E'jhon',E'INACTIVE',1,E'jhon.doe',E'jhon.doe',E'[{"operation":"shift","spec":{"rating":{"primary":{"value":"Rating1"},"*":{"max":"SecondaryRatings.&amp;1.Range","value":"SecondaryRatings.&amp;1.Value","$":"SecondaryRatings.&amp;1.Id"}}}}]',E'Created'),
+      (E'2024-05-31 16:52:25.632862',E'2024-05-31 16:52:48.714138',1,E'assignment_rule',E'jhon',E'ACTIVE',2,E'jhon.doe',E'jhon.doe',E'[{"operation":"shift","spec":{"rating":{"primary":{"value":"Rating2"},"*":{"max":"SecondaryRatings.&amp;1.Range","value":"SecondaryRatings.&amp;1.Value","$":"SecondaryRatings.&amp;1.Id"}}}}]',E'Created'),
+      (E'2024-05-31 16:52:30.775995',E'2024-05-31 16:52:30.776029',0,E'assignment_rule',E'jhon',E'INACTIVE',3,E'jhon.doe',E'jhon.doe',E'[{"operation":"shift","spec":{"rating":{"primary":{"value":"Rating3"},"*":{"max":"SecondaryRatings.&amp;1.Range","value":"SecondaryRatings.&amp;1.Value","$":"SecondaryRatings.&amp;1.Id"}}}}]',E'Created');
+    </sql>
+  </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,10 @@
+<databaseChangeLog
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <changeSet author="Suraj" id="280720221237">
+    <renameColumn columnDataType="VARCHAR" newColumnName="rule_specs"
+          oldColumnName="transformation_rule" tableName="transformation_rules"/>
+  </changeSet>
+</databaseChangeLog>
