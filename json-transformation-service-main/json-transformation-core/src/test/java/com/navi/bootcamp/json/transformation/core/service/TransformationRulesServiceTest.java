@@ -101,7 +101,7 @@ public class TransformationRulesServiceTest {
     }
 
     @Test
-    @Disabled
+    //@Disabled
     void expectsToFailToChangeTransformationRuleStatus() {
         final TransformationRuleStatusChangeRequest request = TransformationRuleStatusChangeRequest.builder()
             .ruleName("dummy_rule").version(2).finalStatus(Status.ACTIVE).build();

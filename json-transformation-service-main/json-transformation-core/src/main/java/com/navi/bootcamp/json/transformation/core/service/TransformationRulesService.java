@@ -75,10 +75,18 @@ public class TransformationRulesService {
         TransformationRuleStatusChangeRequest request, String requester) {
 
         List<TransformationRule> updatedMetadataList = new ArrayList<>();
+
+       //find if rule already exists
         Optional<TransformationRule> transformationRuleOptional = transformationRuleRepository
             .findByRuleNameAndRuleVersion(request.getRuleName(), request.getVersion());
 
-        TransformationRule metadata = transformationRuleOptional.get();
+        // My corrected code for throwing exception
+        TransformationRule metadata;
+        if (transformationRuleOptional.isPresent()) {
+            metadata = transformationRuleOptional.get();
+        }else {
+            throw new TransformationDefinitionNotFoundException(request.getRuleName());
+        }
 
         if (Status.ACTIVE.equals(request.getFinalStatus())) {
 
