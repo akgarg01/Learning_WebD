@@ -74,11 +74,39 @@ public class TransformationRulesServiceTest {
         //  Use the verify() method to verify the transformationRuleRepository.findAllByRuleName
         //  () method is called once
         //  Use the assertThat() method to assert that the transformationRules list is not empty
+        final TransformationRule transformationRule = TransformationRule.builder().ruleName("dummy_rule")
+                .ruleOwner("ruleOwner").ruleVersion(0).lastUpdatedBy("requester")
+                .status(Status.INACTIVE).build();
+        List<TransformationRule> transformationRules = List.of(transformationRule);
+        when(transformationRuleRepository.findAllByRuleName(any()))
+                .thenReturn(transformationRules);
+        List<TransformationRule> response = transformationRulesService.fetchTransformationRuleByRuleName("dummy_rule");
+        verify(transformationRuleRepository, times(1)).findAllByRuleName(any());
+        assertThat(response).isNotNull();
     }
 
     @Test
     void expectsToFailToFetchTransformationRuleByRuleName() {
         // TODO: Implement the test
+        List<TransformationRule> transformationRules = List.of();
+        when(transformationRuleRepository.findAllByRuleName(any())).thenReturn(transformationRules);
+        List<TransformationRule> response = List.of();
+
+        //if I don't use try and catch, then the test will stop after throwing the exception
+
+        try{
+            response = transformationRulesService.fetchTransformationRuleByRuleName("dummy_rule");
+        }
+        catch(TransformationDefinitionNotFoundException e){
+            assertThat(e).isInstanceOf(TransformationDefinitionNotFoundException.class);
+        }
+
+        // In case the exception is not thrown, the response should be empty
+        // findAllByRuleName should be called anyway
+        finally {
+            verify(transformationRuleRepository, times(1)).findAllByRuleName(any());
+            assertThat(response).isEmpty();
+        }
     }
 
     @Test

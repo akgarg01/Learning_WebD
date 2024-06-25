@@ -51,15 +51,21 @@ public class TransformationRulesService {
         return transformationRuleRepository.save(transformationRule);
     }
 
-    public List<TransformationRule> fetchTransformationRuleByRuleName(String ruleName)
-        throws TransformationDefinitionNotFoundException {
-        // TODO: Implement this method
-        //  should fetch all transformation rules with the given rule name
-        //  The transformation rules should be fetched from the database
-        //  If no transformation rules are found with the given rule name, throw a
-        //  TransformationDefinitionNotFoundException
-        //  Return the list of transformation rules
-        throw new UnsupportedOperationException("Not yet implemented");
+    public List<TransformationRule> fetchTransformationRuleByRuleName(String ruleName){
+//        throws TransformationDefinitionNotFoundException {
+//        // TODO: Implement this method
+//        //  should fetch all transformation rules with the given rule name
+//        //  The transformation rules should be fetched from the database
+//        //  If no transformation rules are found with the given rule name, throw a
+//        //  TransformationDefinitionNotFoundException
+//        //  Return the list of transformation rules
+//        throw new UnsupportedOperationException("Not yet implemented");
+//    }
+        List<TransformationRule> transformationRules = transformationRuleRepository.findAllByRuleName(ruleName);
+        if(transformationRules.isEmpty()) {
+            throw new TransformationDefinitionNotFoundException(ruleName);
+        }
+        return transformationRules;
     }
 
     // TODO: Fix this method
