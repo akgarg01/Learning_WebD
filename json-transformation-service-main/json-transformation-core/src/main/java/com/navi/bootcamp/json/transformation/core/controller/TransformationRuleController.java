@@ -3,11 +3,14 @@ package com.navi.bootcamp.json.transformation.core.controller;
 import com.navi.bootcamp.json.transformation.core.constants.Constants;
 import com.navi.bootcamp.json.transformation.core.contract.TransformationRuleCreationRequest;
 import com.navi.bootcamp.json.transformation.core.contract.TransformationRuleStatusChangeRequest;
+import com.navi.bootcamp.json.transformation.core.entity.Status;
 import com.navi.bootcamp.json.transformation.core.entity.TransformationRule;
+import com.navi.bootcamp.json.transformation.core.repository.TransformationRuleRepository;
 import com.navi.bootcamp.json.transformation.core.service.TransformationRulesService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.extern.log4j.Log4j2;
@@ -30,10 +33,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class TransformationRuleController {
 
     private final TransformationRulesService transformationRulesService;
+    private final TransformationRuleRepository transformationRuleRepository;
 
     @Autowired
-    public TransformationRuleController(TransformationRulesService transformationRulesService) {
+    public TransformationRuleController(TransformationRulesService transformationRulesService, TransformationRuleRepository transformationRuleRepository) {
         this.transformationRulesService = transformationRulesService;
+        this.transformationRuleRepository = transformationRuleRepository;
     }
 
     @ApiOperation(value = "Create a new transformation rule", response = TransformationRule.class)
@@ -70,13 +75,20 @@ public class TransformationRuleController {
     public ResponseEntity<?> getActiveTransformationRule(
         @NotNull @RequestParam String ruleName,
         @RequestHeader(value = Constants.X_CLIENT_ID) String requester) {
+        log.info("Received request to fetch active transformation rule by requester {}", requester);
         // TODO: Implement this method
         //  should fetch the active transformation rule with the given rule name
         //  The transformation rule should be fetched from the database
         //  If no transformation rule is found with the given rule name, return a
         //  HttpStatus.NOT_FOUND response
         //  Else Return the transformation rule with HttpStatus.OK
-        throw new UnsupportedOperationException("Not yet implemented");
+        Optional<TransformationRule> transformationRule = transformationRulesService.findTransformationRuleByRuleNameAndStatus(ruleName, Status.ACTIVE);
+        if(transformationRule.isPresent()) {
+            return new ResponseEntity<>(transformationRule.get(), HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        //throw new UnsupportedOperationException("Not yet implemented");
     }
 
 

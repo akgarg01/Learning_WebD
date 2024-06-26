@@ -16,6 +16,8 @@ import com.navi.bootcamp.json.transformation.core.entity.Status;
 import com.navi.bootcamp.json.transformation.core.entity.TransformationRule;
 import com.navi.bootcamp.json.transformation.core.service.TransformationRulesService;
 import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -100,6 +102,26 @@ public class TransformationRuleControllerTest {
             .andReturn()
             .getResponse();
 
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString()).isNotEmpty();
+    }
+
+    // added as an assignment after implementing the "/active" API
+    @Test
+    void testGetActiveTransformationRuleValidCase() throws Exception {
+        final TransformationRule transformationRule = TransformationRule.builder().ruleName("dummy_rule")
+            .ruleOwner("ruleOwner").ruleVersion(0).lastUpdatedBy("requester").status(Status.ACTIVE).build();
+        when(transformationRulesService.findTransformationRuleByRuleNameAndStatus(anyString(),any()))
+                .thenReturn(Optional.of(transformationRule));
+        final MockHttpServletResponse response = mockMvc.perform(get("/v1/transformation-rules"
+                + "/active")
+                .param("ruleName","dummy_rule")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(Constants.X_CLIENT_ID, "requester")
+                .header(Constants.X_CORRELATION_ID, "correlationId")
+                .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.getContentAsString()).isNotEmpty();
     }
