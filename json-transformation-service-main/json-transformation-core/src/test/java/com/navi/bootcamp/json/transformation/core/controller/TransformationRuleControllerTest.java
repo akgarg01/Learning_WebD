@@ -14,6 +14,7 @@ import com.navi.bootcamp.json.transformation.core.contract.TransformationRuleCre
 import com.navi.bootcamp.json.transformation.core.contract.TransformationRuleStatusChangeRequest;
 import com.navi.bootcamp.json.transformation.core.entity.Status;
 import com.navi.bootcamp.json.transformation.core.entity.TransformationRule;
+import com.navi.bootcamp.json.transformation.core.repository.TransformationRuleRepository;
 import com.navi.bootcamp.json.transformation.core.service.TransformationRulesService;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +39,8 @@ public class TransformationRuleControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private TransformationRulesService transformationRulesService;
+    @Autowired
+    private TransformationRuleRepository transformationRuleRepository;
 
     @Test
     void testUploadTransformationRuleValidCase() throws Exception {
@@ -120,6 +123,44 @@ public class TransformationRuleControllerTest {
                 .header(Constants.X_CLIENT_ID, "requester")
                 .header(Constants.X_CORRELATION_ID, "correlationId")
                 .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString()).isNotEmpty();
+    }
+
+    @Test
+    void testGetTransformationRuleByNameAndVersionValidCase() throws Exception {
+        final TransformationRule transformationRule = TransformationRule.builder().ruleName("dummy_rule")
+                .ruleOwner("ruleOwner").ruleVersion(0).lastUpdatedBy("requester").status(Status.ACTIVE).build();
+        when(transformationRulesService.fetchTransformationRuleByNameAndVersion(anyString(),any()))
+        .thenReturn(Optional.of(transformationRule));
+        final MockHttpServletResponse response = mockMvc.perform(get("/v1/transformation-rules"
+                        + "/version")
+                        .param("ruleName","dummy_rule")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(Constants.X_CLIENT_ID, "requester")
+                        .header(Constants.X_CORRELATION_ID, "correlationId")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn()
+                .getResponse();
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString()).isNotEmpty();
+    }
+
+    @Test
+    void testGetLatestTransformationRuleByNameValidCase() throws Exception {
+        final TransformationRule transformationRule =  TransformationRule.builder().ruleName("dummy_rule")
+                .ruleOwner("ruleOwner").lastUpdatedBy("requester").status(Status.ACTIVE).build();
+        when(transformationRulesService.fetchLatestTransformationRuleByName(anyString()))
+                .thenReturn(Optional.of(transformationRule));
+        final MockHttpServletResponse response = mockMvc.perform(get("/v1/transformation-rules"
+                        + "/version")
+                        .param("ruleName","dummy_rule")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(Constants.X_CLIENT_ID, "requester")
+                        .header(Constants.X_CORRELATION_ID, "correlationId")
+                        .accept(MediaType.APPLICATION_JSON))
                 .andReturn()
                 .getResponse();
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());

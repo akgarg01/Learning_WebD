@@ -114,4 +114,12 @@ public class TransformationRulesService {
         return metadata;
     }
 
+    public Optional<TransformationRule> fetchTransformationRuleByNameAndVersion(String ruleName, Integer ruleVersion) {
+        return transformationRuleRepository.findByRuleNameAndRuleVersion(ruleName,ruleVersion);
+    }
+
+    public Optional<TransformationRule> fetchLatestTransformationRuleByName(String ruleName) {
+        return transformationRuleRepository.findTopByRuleNameOrderByRuleVersionDesc(ruleName);
+    }
+
 }

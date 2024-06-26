@@ -91,5 +91,25 @@ public class TransformationRuleController {
         //throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    @ApiOperation(value = "Get transformation rule by name and version", response = TransformationRule.class)
+    @GetMapping("/version")
+    public ResponseEntity<?> getTransformationRuleByNameAndVersion(
+            @NotNull @RequestParam String ruleName,
+            @RequestHeader(value = Constants.X_CLIENT_ID) String requester,
+            @RequestParam(required = false) Integer version) {
+        log.info("Received request to fetch version transformation rule of by requester {}", requester);
+        Optional<TransformationRule> transformationRule;
+        if(version != null) {
+            transformationRule = transformationRulesService.fetchTransformationRuleByNameAndVersion(ruleName, version);
+        }else {
+            transformationRule = transformationRulesService.fetchLatestTransformationRuleByName(ruleName);
+        }
+        if(transformationRule.isPresent()) {
+            return new ResponseEntity<>(transformationRule.get(), HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        //throw new UnsupportedOperationException("Not yet implemented");
+    }
 
 }
